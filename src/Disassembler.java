@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URL;
 import java.util.Scanner;
 
 import static java.lang.Integer.parseInt;
@@ -17,11 +16,47 @@ import static java.lang.Integer.parseInt;
 
 public class Disassembler {
 	public static void main(String[] args) {
-//		String[] machineCodeFile;
-//		int counter = 0;
-//		for (String code : machineCodeFile) {
-//			String translation;
+		try {
+			File myObj = new File("C:\\Users\\winry\\Dropbox\\code\\java" +
+					"\\cody\\java-hackDisassembler\\asm\\Add.hack");
+			Scanner myReader = new Scanner(myObj);
+			int counter = 0;
+			while (myReader.hasNextLine()) {
+				String translation;
+				String code = myReader.nextLine();
+				System.out.println(code);
+				System.out.print(String.format("%d: %s (commonly referred to as "
+						, counter, code));
+				counter++;
+
+				if (code.charAt(0) == '0') {
+					translation =
+							"@" + binaryToDecimal(code.substring(1, 16));
+				} else {
+					translation = "[Blank, it's a C]";
+				}
+
+				System.out.println(translation + ")");
+			}
+			myReader.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
+
+
+//		File myObj = new File("C:\\Users\\winry\\Dropbox\\code\\java" +
+//				"\\cody\\java-hackDisassembler\\asm\\Add.asm");
 //
+//		Scanner machineCodeFile = new Scanner("C:\\Users\\winry\\Dropbox\\code\\java" +
+//				"\\cody\\java-hackDisassembler\\asm\\Add.asm");
+//		int counter = 0;
+//		while (machineCodeFile.hasNextLine()) {
+//			String translation;
+//			String code = machineCodeFile.nextLine();
+//			System.out.println(code);
+
+
 //			System.out.print(String.format("%d: %s (commonly referred to as "
 //					, counter, code));
 //			counter++;
@@ -32,26 +67,23 @@ public class Disassembler {
 //				translation = "[Blank, it's a C]";
 //
 //			}
-//			System.out.println(translation + ")");
-//		}
-		printFile();
+//			System.out.printlzn(translation + ")");
+//	}
+//		printFile();
 	}
 
 
 	public static void printFile() {
 		try {
-			File directory = new File("./");
-			System.out.println(directory.getAbsolutePath());
-
-			URL path = Disassembler.class.getResource("Add.asm");
-			System.out.println(path);
-
-
-			File myObj = new File("Add.asm");
+			File myObj = new File("C:\\Users\\winry\\Dropbox\\code\\java" +
+				"\\cody\\java-hackDisassembler\\asm\\Add.hack");
 			Scanner myReader = new Scanner(myObj);
 			while (myReader.hasNextLine()) {
 				String data = myReader.nextLine();
 				System.out.println(data);
+
+
+
 			}
 			myReader.close();
 		} catch (FileNotFoundException e) {
