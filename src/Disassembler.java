@@ -2,6 +2,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import static java.lang.Integer.parseInt;
+
 
 public class Disassembler {
 	public static void main(String[] args) {
@@ -11,9 +13,18 @@ public class Disassembler {
 			Scanner machineCode = new Scanner(file);
 
 			int counter = 0;
+			String translation;
 			while (machineCode.hasNextLine()) {
 				String code = machineCode.nextLine();
-				System.out.println(String.format("%d: %s", counter, code));
+
+				if (code.charAt(0) == '0') {
+					translation = "@" + binToDec(code.substring(1, 16));
+				} else {
+					translation = "C";
+				}
+
+				System.out.println(String.format("%d: %s (%s)", counter, code
+						, translation));
 
 				counter++;
 			}
@@ -39,5 +50,17 @@ public class Disassembler {
 //			System.out.println("An error occurred.");
 //			e.printStackTrace();
 //		}
+	}
+
+	public static int binToDec(String binary) {
+		// our result of the decimal conversion
+		int result = 0;
+
+		for (int i = 0; i < binary.length(); i++) {
+			result += Math.pow(2, i)*parseInt(String.valueOf(binary.charAt(binary.length()-1-i)));
+		}
+
+		// now let's return the fruit of our hard work: the result!
+		return result;
 	}
 }
