@@ -66,7 +66,7 @@ public class Disassembler {
 
 		try {
 			File file = new File("C:\\Users\\winry\\Dropbox\\code\\java" +
-					"\\cody\\java-hackDisassembler\\asm\\Add.hack");
+					"\\cody\\java-hackDisassembler\\asm\\PongLCody.hack");
 			Scanner machineCode = new Scanner(file);
 
 			int counter = 0;
@@ -88,12 +88,11 @@ public class Disassembler {
 						translation = computation;
 					}
 					if (!jmp.equals("null")) {
-						translation += "; " + jump;
+						translation += ";" + jmp;
 					}
 				}
 
-				System.out.println(String.format("%d: %s %s", counter, code
-						, translation));
+				System.out.println(translation);
 
 				counter++;
 			}
