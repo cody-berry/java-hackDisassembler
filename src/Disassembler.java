@@ -12,89 +12,96 @@ public class Disassembler {
 
 		// computation
 		Hashtable<String, String> comp = new Hashtable();
-		comp.put("0", "0101010");
-		comp.put("1", "0111111");
-		comp.put("-1", "0111010");
-		comp.put("D", "0001100");
-		comp.put("A", "0110000");
-		comp.put("M", "1110000");
-		comp.put("!D", "0001101");
-		comp.put("!A", "0110001");
-		comp.put("!M", "1110001");
-		comp.put("-D", "0001111");
-		comp.put("-A", "0110011");
-		comp.put("-M", "1110011");
-		comp.put("D+1", "0011111");
-		comp.put("A+1", "0110111");
-		comp.put("M+1", "1110111");
-		comp.put("D-1", "0001110");
-		comp.put("A-1", "0110010");
-		comp.put("M-1", "1110010");
-		comp.put("D+A", "0000010");
-		comp.put("D+M", "1000010");
-		comp.put("D-A", "0010011");
-		comp.put("D-M", "1010011");
-		comp.put("A-D", "0000111");
-		comp.put("M-D", "1000111");
-		comp.put("D&A", "0000000");
-		comp.put("D&M", "1000000");
-		comp.put("D|A", "0010101");
-		comp.put("D|M", "1010101");
+		comp.put("0101010", "0");
+		comp.put("0111111", "1");
+		comp.put("0111010", "-1");
+		comp.put("0001100", "D");
+		comp.put("0110000", "A");
+		comp.put("1110000", "M");
+		comp.put("0001101", "!D");
+		comp.put("0110001", "!A");
+		comp.put("1110001", "!M");
+		comp.put("0001111", "-D");
+		comp.put("0110011", "-A");
+		comp.put("1110011", "-M");
+		comp.put("0011111", "D+1");
+		comp.put("0110111", "A+1");
+		comp.put("1110111", "M+1");
+		comp.put("0001110", "D-1");
+		comp.put("0110010", "A-1");
+		comp.put("1110010", "M-1");
+		comp.put("0000010", "D+A");
+		comp.put("1000010", "D+M");
+		comp.put("0010011", "D-A");
+		comp.put("1010011", "D-M");
+		comp.put("0000111", "A-D");
+		comp.put("1000111", "M-D");
+		comp.put("0000000", "D&A");
+		comp.put("1000000", "D&M");
+		comp.put("0010101", "D|A");
+		comp.put("1010101", "D|M");
 
 
 		// destination
 		Hashtable<String, String> dest = new Hashtable();
-		dest.put("null", "000");
-		dest.put("M", "001");
-		dest.put("D", "010");
-		dest.put("MD", "011");
-		dest.put("A", "100");
-		dest.put("AM", "101");
-		dest.put("AD", "110");
-		dest.put("AMD", "111");
+		dest.put("000", "null");
+		dest.put("001", "M");
+		dest.put("010", "D");
+		dest.put("011", "MD");
+		dest.put("100", "A");
+		dest.put("101", "AM");
+		dest.put("110", "AD");
+		dest.put("111", "AMD");
 
 		// jump
 		Hashtable<String, String> jump = new Hashtable();
-		jump.put("null", "000");
-		jump.put("JGT", "001");
-		jump.put("JEQ", "010");
-		jump.put("JGE", "011");
-		jump.put("JLT", "100");
-		jump.put("JNE", "101");
-		jump.put("JLE", "110");
-		jump.put("JMP", "111");
+		jump.put("000", "null");
+		jump.put("001", "JGT");
+		jump.put("010", "JEQ");
+		jump.put("011", "JGE");
+		jump.put("100", "JLT");
+		jump.put("101", "JNE");
+		jump.put("110", "JLE");
+		jump.put("111", "JMP");
 
-		System.out.println("Comp: " + comp);
-		System.out.println("Dest: " + dest);
-		System.out.println("Jump: " + jump);
+		try {
+			File file = new File("C:\\Users\\winry\\Dropbox\\code\\java" +
+					"\\cody\\java-hackDisassembler\\asm\\Add.hack");
+			Scanner machineCode = new Scanner(file);
 
+			int counter = 0;
+			String translation;
+			while (machineCode.hasNextLine()) {
+				String code = machineCode.nextLine();
 
-//		try {
-//			File file = new File("C:\\Users\\winry\\Dropbox\\code\\java" +
-//					"\\cody\\java-hackDisassembler\\asm\\Add.hack");
-//			Scanner machineCode = new Scanner(file);
-//
-//			int counter = 0;
-//			String translation;
-//			while (machineCode.hasNextLine()) {
-//				String code = machineCode.nextLine();
-//
-//				if (code.charAt(0) == '0') {
-//					translation = "@" + binToDec(code.substring(1, 16));
-//				} else {
-//					translation = "C";
-//				}
-//
-//				System.out.println(String.format("%d: %s (%s)", counter, code
-//						, translation));
-//
-//				counter++;
-//			}
-//			machineCode.close();
-//		} catch (FileNotFoundException e) {
-//			System.out.println("An error occurred.");
-//			e.printStackTrace();
-//		}
+				if (code.charAt(0) == '0') {
+					translation = "@" + binToDec(code.substring(1, 16));
+				} else {
+					String computation = comp.get(code.substring(3, 10));
+					String destination = dest.get(code.substring(10, 13));
+					String jmp = jump.get(code.substring(13, 16));
+
+					if (!destination.equals("null")) {
+						translation = destination + "=";
+						translation += computation;
+					} else {
+						translation = computation;
+					}
+					if (!jmp.equals("null")) {
+						translation += "; " + jump;
+					}
+				}
+
+				System.out.println(String.format("%d: %s %s", counter, code
+						, translation));
+
+				counter++;
+			}
+			machineCode.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
 	}
 
 
